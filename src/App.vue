@@ -1,97 +1,54 @@
 <template>
-  <div class=" bg-gray-600 text-white w-1/2 m-auto mt-12">
-    <div class="text-center border-b-2 border-black py-4">
-       <h1 class="text-3xl py-4">ToDo-Liste</h1>
-       <p class="text-xl" v-if="openTodos.length > 0">Offene ToDo's: {{ openTodos.length }}</p>
-        <p class="text-xl" v-else>Momentan keine ToDos zu erledigen!</p>
-       <div class="m-4">
-        <input type="text" class="py-2 w-2/3 text-black" v-model="newTodo"/>
-        <button class="bg-red-400 py-2 w-1/3" @click="addToDo">Add</button> 
-       </div>
-    </div>
+  <div class="flex flex-col">
+    <button class="w-2/12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" @click="renderToDoApp()"> ToDoApp </button>
+    <button class=" w-2/12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" @click="renderInfoText()"> InfoText </button>
+      <div v-if="this.todoapplication == true" >  <ToDoApp /> </div>
+       <div v-if="this.infoapplication == true" >  <infoText /> </div>
     
-    <div >
-    <table class="w-full">
-    <tr class="flex justify-between items-center py-2 px-2">
-      <th><b @click="sortName()">Name &nbsp;</b></th>
-      <th class="ml-auto px-20"><b @click="sortRating()">Rating &nbsp;</b> </th>
-      <th><b>Delete </b> </th>
-    </tr>
-    <tr v-for="(todo, index) in todos" :key="todo.name">
-     <ToDoApp 
-       :todosprob = "todos"
-       :todoprop="todo" 
-       :todoindex="index" 
-       @saveCount = "saveCount()"
-       />
-    </tr>
-  
-  </table>
-
-    </div>
-   <div class="text-center">VUE-Projekt</div>
+    
   </div>
- 
 </template>
 
 <script>
 import ToDoApp from './components/ToDoApp.vue'
+import infoText from './components/infoText.vue'
 
 export default {
-  name: 'App',
-  data() {
+   name: 'App',
+   data(){
     return {
-      newTodo: "",
-      todos: [],
-      toggleRating: false,
-      toggleName: false,
-    }
-  },  
-  methods: {
-    sortRating(){
-      if(this.toggleRating == false) { this.todos.sort((a, b) => a.count < b.count ? 1 : -1); this.toggleRating = true;}
-      else { this.todos.sort((a, b) => a.count > b.count ? 1 : -1); this.toggleRating = false;}
-    },
-    sortName(){
-      if(this.toggleName == false) { this.todos.sort((a, b) => a.name.toUpperCase() < b.name.toUpperCase() ? 1 : -1); this.toggleName = true;}
-      else { this.todos.sort((a, b) => a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1); this.toggleName = false; }
-    },
-    saveCount(){
-         this.storeTodos();
-    },
-    addToDo(){
-      if(this.newTodo.trim() == ""){
-        return;
-      }
-      this.todos.push({name: this.newTodo, done: false, count: 0 });
-      this.storeTodos();
-    },
-    storeTodos(){
-      localStorage.setItem("todos",JSON.stringify(this.todos))
-    }
-  },
-  mounted(){
-    let data = localStorage.getItem("todos");
-    if(data !== "" && data !== null){
-      this.todos = JSON.parse(data);
-    } else {
-      this.todos = [];
-    }
-  },
-  components: {
-    ToDoApp,
-    
-  },
-  computed: {
-    openTodos(){
+      todoapplication: 0,
+      infoapplication: 0,
 
-      const openToDos = this.todos.filter((name) => {
-        return !name.done
-      });
-      return openToDos;
+    };
+   },
+   components: {
+    ToDoApp,
+    infoText,
+},
+
+   methods: {
+    renderToDoApp(){
+      if(this.todoapplication == false){ this.todoapplication = true; }
+      else { this.closeToDoApp(); }
+      this.closeInfoText();
     },
-   
-  },
+    
+    closeToDoApp(){
+      this.todoapplication = false;
+    },
+
+    renderInfoText(){
+      if(this.infoapplication == false){ this.infoapplication = true; }
+      else { this.closeInfoText();  }
+       this.closeToDoApp();
+    },
+
+    closeInfoText(){
+      this.infoapplication = false;
+    },
+
+   },
 };
 </script>
 
