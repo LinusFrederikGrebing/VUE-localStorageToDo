@@ -1,4 +1,4 @@
-# todoapp
+# Erstes kleines VUE-Projekt mit Tailwind als CSS Framework
 
 ## Project setup
 ```
