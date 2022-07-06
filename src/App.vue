@@ -11,10 +11,10 @@
     </div>
     
     <div >
-      <table>
-    <tr>
-      <th><b>Name &nbsp;</b></th>
-      <th><b>Rating &nbsp;</b> </th>
+    <table class="w-full">
+    <tr class="flex justify-between items-center py-2 px-2">
+      <th><b @click="sortName()">Name &nbsp;</b></th>
+      <th class="ml-auto px-20"><b @click="sortRating()">Rating &nbsp;</b> </th>
       <th><b>Delete </b> </th>
     </tr>
     <tr v-for="(todo, index) in todos" :key="todo.name">
@@ -22,16 +22,14 @@
        :todosprob = "todos"
        :todoprop="todo" 
        :todoindex="index" 
-       @toggledone-index="toggleDone(index)"
-       @removetodo-index="removeToDo(index)"
+       @saveCount = "saveCount()"
        />
     </tr>
   
   </table>
-      
 
     </div>
-   <button @click="alertName()" >Sort by first name</button>
+   <div class="text-center">VUE-Projekt</div>
   </div>
  
 </template>
@@ -45,26 +43,27 @@ export default {
     return {
       newTodo: "",
       todos: [],
+      toggleRating: false,
+      toggleName: false,
     }
   },  
   methods: {
-    alertName: function(){
-        this.todos.name.sort(); /** sort function is throwing an error here **/
-      console.log(this.todos.name); /** and this does not format array objects followed by first name **/
+    sortRating(){
+      if(this.toggleRating == false) { this.todos.sort((a, b) => a.count < b.count ? 1 : -1); this.toggleRating = true;}
+      else { this.todos.sort((a, b) => a.count > b.count ? 1 : -1); this.toggleRating = false;}
     },
-  toggleDone(index){
-      this.todos[index].done = !this.todos[index].done;
-      this.storeTodos();
+    sortName(){
+      if(this.toggleName == false) { this.todos.sort((a, b) => a.name.toUpperCase() < b.name.toUpperCase() ? 1 : -1); this.toggleName = true;}
+      else { this.todos.sort((a, b) => a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1); this.toggleName = false; }
     },
-    removeToDo(index){
-      this.todos.splice(index, 1); 
-      this.storeTodos();
+    saveCount(){
+         this.storeTodos();
     },
     addToDo(){
       if(this.newTodo.trim() == ""){
         return;
       }
-      this.todos.push({name: this.newTodo, done: false });
+      this.todos.push({name: this.newTodo, done: false, count: 0 });
       this.storeTodos();
     },
     storeTodos(){
